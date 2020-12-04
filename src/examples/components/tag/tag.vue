@@ -54,15 +54,11 @@
                     </TagRemoveIcon>
                   </TagSelectOption>
                 </TagSelectionList>
-                <span
-                  style="min-width: 90px"
-                  class="border-none p-0 w-auto inline-block text-white"
-                >
+                <div class="border-none p-0 inline-block text-white">
                   <TagFilter
-                    size="1"
-                    class="cursor-text border-none max-w-full outline-none box-content shadow-none inline-block resize-none p-0 h-5 gray_bg"
+                    class="cursor-text border-none outline-none box-content shadow-none inline-block p-0 h-5 gray_bg"
                   />
-                </span>
+                </div>
                 <TagsControlArrow
                   as="span"
                   class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none"

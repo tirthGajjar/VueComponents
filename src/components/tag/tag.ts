@@ -366,7 +366,7 @@ export const Tags = defineComponent({
 
         if (api.highlightedOptionId.value !== null) {
           const idx = filteredOptsId.indexOf(api.highlightedOptionId.value) - 1
-          if (idx === -1) {
+          if (idx < 0 || idx >= filteredOptsId.length) {
             return api.highLightLastOption()
           }
 
@@ -382,7 +382,7 @@ export const Tags = defineComponent({
 
         if (api.highlightedOptionId.value !== null) {
           const idx = filteredOptsId.indexOf(api.highlightedOptionId.value) + 1
-          if (idx === -1) {
+          if (idx < 0 || idx >= filteredOptsId.length) {
             return api.highLightFirstOption()
           }
 
@@ -664,14 +664,16 @@ export const TagFilter = defineComponent({
   name: 'TagFilter',
   props: {
     as: { type: [Object, String], default: 'input' },
+    removeSelectedOnBackSpace: { type: Boolean, default: false },
   },
-  setup(_props, { emit }) {
+  setup(props, { emit }) {
     const api = useTagsContext('TagFilter', 'TagsControl')
     const id = `raxui-tag-filter-${useId()}`
 
     function handleOnInput(event: InputEvent) {
       const { value } = event.target as HTMLInputElement
       api.filterQuery.value = value
+      api.highLightFirstOption()
       emit('filter-query-change', value)
     }
 
@@ -692,7 +694,10 @@ export const TagFilter = defineComponent({
 
       switch (key) {
         case Keys.Backspace: {
-          if (api.filterQuery.value.length === 0) {
+          if (
+            props.removeSelectedOnBackSpace &&
+            api.filterQuery.value.length === 0
+          ) {
             api.removeLastSelectedOption()
           }
           break
@@ -751,6 +756,7 @@ export const TagFilter = defineComponent({
     }
 
     function handleOnFocus() {
+      api.highLightFirstOption()
       if (api.isOpen.value) return
 
       api.openMenu()
@@ -774,6 +780,7 @@ export const TagFilter = defineComponent({
       type: 'text',
       autocomplete: 'off',
       tabIndex: 0,
+      size: api.filterQuery.value.length,
       value: api.filterQuery.value,
       onInput: this.handleOnInput,
       onKeydown: this.handleOnKeyDown,
