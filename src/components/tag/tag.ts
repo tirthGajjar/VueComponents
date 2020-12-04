@@ -81,6 +81,7 @@ type TagsStateDefinition = {
   tagMenuRef: Ref<HTMLElement | null>
   tagSelectionListRef: Ref<HTMLElement | null>
   tagFilterRef: Ref<HTMLInputElement | null>
+  tagCreateRef: Ref<HTMLElement | null>
 
   /**
    * Methods
@@ -88,7 +89,11 @@ type TagsStateDefinition = {
   openMenu(): void
   closeMenu(): void
   toggleMenu(): void
-  select(optionId: StringOrNumber): void
+  select(
+    optionId: StringOrNumber,
+    createNew?: boolean,
+    newOptionDetails?: Partial<Option>
+  ): void
   clearFilterQuery(): void
   handleOnClick(event: MouseEvent): void
   foucsFilterBox(): void
@@ -192,6 +197,7 @@ export const Tags = defineComponent({
     const tagControlRef = ref<TagsStateDefinition['tagControlRef']['value']>(
       null
     )
+    const tagCreateRef = ref<TagsStateDefinition['tagCreateRef']['value']>(null)
 
     // ---------------- Computed -------------------
     const options = computed(() => props.options)
@@ -231,7 +237,6 @@ export const Tags = defineComponent({
             filteredOptionsId.value.push(option.id)
           })
         } else {
-          // ids = []
           opts.forEach((option: any) => {
             const searchKeyValue = option[props.searchKey] as string
 
@@ -258,6 +263,7 @@ export const Tags = defineComponent({
       tagSelectionListRef,
       tagFilterRef,
       tagControlRef,
+      tagCreateRef,
       openMenu() {
         api.isOpen.value = true
         emit('menu-opened')
@@ -275,9 +281,13 @@ export const Tags = defineComponent({
           api.openMenu()
         }
       },
-      select(optionId: StringOrNumber) {
+      select(
+        optionId: StringOrNumber,
+        createNew = false,
+        newOptionDetails?: Option
+      ) {
         const option = (api.optionsMap.value as any)[optionId]
-        if (props.disabled || option.disabled) {
+        if (props.disabled || option?.disabled) {
           return
         }
 
@@ -312,8 +322,20 @@ export const Tags = defineComponent({
             modelValue.splice(0, props.modelValue.length)
           }
 
-          const selectedOption = (api.optionsMap.value as any)[optionId]
-          modelValue.push(selectedOption)
+          let selectedOption: Option
+
+          if (createNew && newOptionDetails) {
+            selectedOption = { ...newOptionDetails, id: optionId }
+            modelValue.push(selectedOption)
+          } else {
+            selectedOption = (api.optionsMap.value as any)[optionId]
+            if (selectedOption) {
+              modelValue.push(selectedOption)
+            } else {
+              throw new Error(`Invalid optionId: ${optionId}`)
+            }
+          }
+
           const eventData = {
             selectedOptionId: optionId,
             selectedOption: selectedOption,
@@ -431,7 +453,10 @@ export const Tags = defineComponent({
         if (api.tagControlRef.value?.contains(event.target as HTMLElement))
           return
 
-        if (!api.tagMenuRef.value?.contains(event.target as HTMLElement)) {
+        if (
+          !api.tagMenuRef.value?.contains(event.target as HTMLElement) ||
+          !api.tagCreateRef.value?.contains(event.target as HTMLElement)
+        ) {
           api.closeMenu()
         }
       }
@@ -905,5 +930,59 @@ export const TagCreateOption = defineComponent({
   name: 'TagCreateOption',
   props: {
     as: { type: [Object, String], default: 'template' },
+  },
+})
+
+export const TagCreate = defineComponent({
+  name: 'TagCreate',
+  props: {
+    as: { type: [Object, String], default: 'div' },
+    optionId: { type: [String, Number], required: true },
+    value: { type: Object, required: true },
+    selectOnClick: { type: Boolean, default: true },
+  },
+  setup(props, { emit }) {
+    const id = `raxui-tag-create-${useId()}`
+    const api = useTagsContext('TagCreate')
+
+    function handleOnClick(event: MouseEvent) {
+      event.stopImmediatePropagation()
+
+      const newOption: Option = {
+        id: props.optionId,
+        ...props.value,
+      }
+
+      emit('create-new-tag-clicked', newOption)
+      if (props.selectOnClick) {
+        api.select(props.optionId, true, newOption)
+      }
+      api.filterQuery.value = ''
+    }
+
+    return {
+      id,
+      el: api.tagCreateRef,
+      handleOnClick,
+    }
+  },
+  render() {
+    const api = useTagsContext('TagCreate')
+    const visible = computed(() => api.filterQuery.value.trim() !== '')
+
+    const slot = { visible: visible.value }
+
+    const propsWeControl = {
+      id: this.id,
+      ref: 'el',
+      onClick: this.handleOnClick,
+    }
+
+    return render({
+      props: { ...this.$props, ...propsWeControl },
+      slot,
+      slots: this.$slots,
+      attrs: this.$attrs,
+    })
   },
 })

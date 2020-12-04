@@ -15,9 +15,6 @@
           @option-selected="
             (eventData) => printEventinfo('option-selected', eventData)
           "
-          @filter-query-change="
-            (eventData) => printEventinfo('filter-query-change', eventData)
-          "
         >
           <div class="relative text-white">
             <span
@@ -57,6 +54,7 @@
                 <div class="border-none p-0 inline-block text-white">
                   <TagFilter
                     class="cursor-text border-none outline-none box-content shadow-none inline-block p-0 h-5 gray_bg"
+                    @filter-query-change="onFilterQueryChange"
                   />
                 </div>
                 <TagsControlArrow
@@ -121,6 +119,52 @@
                     </span>
                   </div>
                 </TagMenuOption>
+                <TagCreate
+                  :optionId="newOption.id"
+                  as="template"
+                  :value="newOption"
+                  v-slot="{ visible }"
+                  @create-new-tag-clicked="createNewTag"
+                >
+                  <div
+                    v-if="visible"
+                    :class="
+                      classNames(
+                        'relative py-2 pl-3 cursor-pointer select-none pr-9 focus:outline-none text-white'
+                      )
+                    "
+                  >
+                    Create
+                    <span
+                      class="block truncate max-w-max-content px-2 rounded-md font-normal"
+                      :style="{ 'background-color': newOption.bgColor }"
+                    >
+                      {{ newOption.label }}
+                    </span>
+                    <div>
+                      <span
+                        v-for="color in colors"
+                        :key="color"
+                        :style="{ 'background-color': color }"
+                        class="inline-block w-5 h-5 mx-2 mt-4 cursor-pointer"
+                        @click="(event) => changeColor(color, event)"
+                      >
+                        <svg
+                          v-if="newOption.bgColor === color"
+                          class="w-5 h-5"
+                          viewbox="0 0 20 20"
+                          fill="white"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                      </span>
+                    </div>
+                  </div>
+                </TagCreate>
               </TagMenu>
             </div>
           </div>
@@ -142,7 +186,9 @@ import {
   TagMenuOption,
   TagsControlArrow,
   TagRemoveIcon,
+  TagCreate,
 } from '@raxui'
+import { isEmpty } from '@/utils/isEmpty'
 
 export default {
   components: {
@@ -155,6 +201,7 @@ export default {
     TagMenu,
     TagMenuOption,
     TagRemoveIcon,
+    TagCreate,
   },
   setup() {
     const colors = {
@@ -189,19 +236,60 @@ export default {
       },
     ])
 
-    const selectedTags = ref([tags.value[0]])
     function printEventinfo(eventName, eventData = {}) {
       console.log(`[${eventName}]:`, eventData)
+    }
+
+    function getRandomColor() {
+      const colorKeys = Object.keys(colors)
+      return colors[colorKeys[Math.floor(Math.random() * colorKeys.length)]]
+    }
+
+    const selectedTags = ref([tags.value[0]])
+
+    const searchQuery = ref('')
+
+    const selectedBgColor = ref(getRandomColor())
+    const newOption = ref({
+      id: tags.value.length + 1,
+      label: '',
+      bgColor: selectedBgColor.value,
+    })
+
+    function onFilterQueryChange(query) {
+      if (!isEmpty(query.trim())) {
+        newOption.value.label = query
+      } else {
+        newOption.value.label = ''
+      }
+    }
+
+    function changeColor(color, event) {
+      event.stopImmediatePropagation()
+      newOption.value.bgColor = color
+    }
+
+    function createNewTag(option) {
+      console.log('New option', option)
+      tags.value.push(option)
+      newOption.value.id = `${tags.value.length + 1}`
+      newOption.value.label = ''
+      newOption.value.bgColor = getRandomColor()
     }
 
     return {
       tags,
       selectedTags,
       colors,
+      searchQuery,
+      newOption,
       classNames(...classes) {
         return classes.filter(Boolean).join(' ')
       },
       printEventinfo,
+      onFilterQueryChange,
+      createNewTag,
+      changeColor,
     }
   },
 }
