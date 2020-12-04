@@ -730,7 +730,11 @@ export const TagFilter = defineComponent({
 
         case Keys.Enter: {
           event.preventDefault()
-          if (api.highlightedOptionId.value === null) return
+          if (
+            api.highlightedOptionId.value === null ||
+            api.filteredOptionsId.value.length === 0
+          )
+            return
           api.select(api.highlightedOptionId.value)
           break
         }
@@ -960,22 +964,35 @@ export const TagCreate = defineComponent({
       api.filterQuery.value = ''
     }
 
+    function handleOnMouseOver() {
+      api.setHighlightedOption(props.optionId)
+    }
+
     return {
       id,
       el: api.tagCreateRef,
       handleOnClick,
+      handleOnMouseOver,
     }
   },
   render() {
     const api = useTagsContext('TagCreate')
     const visible = computed(() => api.filterQuery.value.trim() !== '')
 
-    const slot = { visible: visible.value }
+    const highlighted = computed<boolean>(
+      () => this.$props.optionId === api.highlightedOptionId.value
+    )
+
+    const slot = {
+      visible: visible.value,
+      highlighted: highlighted.value,
+    }
 
     const propsWeControl = {
       id: this.id,
       ref: 'el',
       onClick: this.handleOnClick,
+      onMouseOver: this.handleOnMouseOver,
     }
 
     return render({

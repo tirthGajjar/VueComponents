@@ -123,14 +123,15 @@
                   :optionId="newOption.id"
                   as="template"
                   :value="newOption"
-                  v-slot="{ visible }"
+                  v-slot="{ visible, highlighted }"
                   @create-new-tag-clicked="createNewTag"
                 >
                   <div
                     v-if="visible"
                     :class="
                       classNames(
-                        'relative py-2 pl-3 cursor-pointer select-none pr-9 focus:outline-none text-white'
+                        'relative py-2 pl-3 cursor-pointer select-none pr-9 focus:outline-none text-white',
+                        highlighted ? 'bg-gray-600' : 'text-gray-900'
                       )
                     "
                   >
