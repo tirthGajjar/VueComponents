@@ -10,6 +10,8 @@ import {
   inject,
   InjectionKey,
   nextTick,
+  onMounted,
+  onUnmounted,
   provide,
   ref,
   Ref,
@@ -263,6 +265,7 @@ export const Tags = defineComponent({
       closeMenu() {
         api.isOpen.value = false
         api.highlightedOptionId.value = null
+        api.tagFilterRef.value?.blur()
         emit('menu-closed')
       },
       toggleMenu() {
@@ -321,6 +324,7 @@ export const Tags = defineComponent({
         }
 
         emit('update:modelValue', modelValue)
+        api.tagFilterRef.value?.focus()
       },
       setHighlightedOption(optionId: StringOrNumber) {
         api.highlightedOptionId.value = optionId
@@ -420,6 +424,21 @@ export const Tags = defineComponent({
         api.select(lastOption.id)
       },
     }
+
+    onMounted(() => {
+      function handler(event: MouseEvent) {
+        if (!api.isOpen.value) return
+        if (api.tagControlRef.value?.contains(event.target as HTMLElement))
+          return
+
+        if (!api.tagMenuRef.value?.contains(event.target as HTMLElement)) {
+          api.closeMenu()
+        }
+      }
+
+      window.addEventListener('click', handler)
+      onUnmounted(() => window.removeEventListener('click', handler))
+    })
 
     provide(TagsContext, api)
 
@@ -555,9 +574,7 @@ export const TagSelectOption = defineComponent({
     const id = `raxui-tag-select-option-${useId()}`
     const optionId = computed(() => props.optionId)
 
-    function removeOption(event: MouseEvent) {
-      event.preventDefault()
-      event.stopPropagation()
+    function removeOption() {
       if (!api.isOpen.value) {
         return api.openMenu()
       }
@@ -585,8 +602,10 @@ export const TagSelectOption = defineComponent({
     }
 
     const handleOnClick = (event: MouseEvent) => {
+      event.stopPropagation()
+      event.preventDefault()
       if (this.$props.onClickRemove) {
-        this.removeOption(event)
+        this.removeOption()
       }
     }
 
@@ -623,7 +642,11 @@ export const TagRemoveIcon = defineComponent({
 
     const propsWeControl = {
       id: this.id,
-      onClick: tagSelectOptionAPI.removeOption,
+      onClick: (event: MouseEvent) => {
+        event.preventDefault()
+        event.stopPropagation()
+        tagSelectOptionAPI.removeOption()
+      },
     }
 
     const slot = {}
@@ -727,12 +750,19 @@ export const TagFilter = defineComponent({
       }
     }
 
+    function handleOnFocus() {
+      if (api.isOpen.value) return
+
+      api.openMenu()
+    }
+
     return {
       id,
       el: api.tagFilterRef,
       handleOnInput,
       handleOnKeyDown,
       handleOnClick,
+      handleOnFocus,
     }
   },
   render() {
@@ -748,6 +778,7 @@ export const TagFilter = defineComponent({
       onInput: this.handleOnInput,
       onKeydown: this.handleOnKeyDown,
       onClick: this.handleOnClick,
+      onFocus: this.handleOnFocus,
     }
 
     return render({
