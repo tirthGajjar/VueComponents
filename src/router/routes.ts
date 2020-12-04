@@ -98,18 +98,30 @@ const routes: RouteRecordRaw[] = [
     ],
   },
   {
-    name: 'Select',
-    path: '/select',
-    component: () => import('@examples/components/select/select-multiple.vue'),
+    name: 'Tags',
+    path: '/tags',
+    component: () => import('@examples/components/tag/tag.vue'),
     children: [
       {
-        name: 'Select multiple',
-        path: '/select/multiple',
-        component: () =>
-          import('@examples/components/select/select-multiple.vue'),
+        name: 'Tags (Multiple)',
+        path: '/tags/multiple',
+        component: () => import('@examples/components/tag/tag.vue'),
       },
     ],
   },
+  // {
+  //   name: 'Select',
+  //   path: '/select',
+  //   component: () => import('@examples/components/select/select-multiple.vue'),
+  //   children: [
+  //     {
+  //       name: 'Select multiple',
+  //       path: '/select/multiple',
+  //       component: () =>
+  //         import('@examples/components/select/select-multiple.vue'),
+  //     },
+  //   ],
+  // },
 ]
 
 export default routes

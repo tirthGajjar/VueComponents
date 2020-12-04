@@ -16,7 +16,6 @@ import {
 import { Features, render } from '../../utils/render'
 import { Keys } from '../../keyboard'
 import { useId } from '../../hooks/use-id'
-import { resolvePropValue } from '../../utils/resolve-prop-value'
 import { calculateActiveIndex, Focus } from '../../utils/calculate-active-index'
 
 enum SelectboxState {
@@ -100,7 +99,6 @@ export const Selectbox = defineComponent({
     },
   },
   setup(props, { slots, attrs, emit }) {
-    const { modelValue, ...passThroughProps } = props
     const selectboxState = ref<StateDefinition['selectboxState']['value']>(
       SelectboxState.Closed
     )
@@ -152,7 +150,7 @@ export const Selectbox = defineComponent({
           api.selectedValues.value[0] = value
           emit('update:modelValue', api.selectedValues.value)
         }
-        emit('selectedChange', api.selectedValues.value)
+        emit('selected-change', api.selectedValues.value)
       },
       goToOption(focus: Focus, id?: string) {
         const nextActiveOptionIndex = calculateActiveIndex(
@@ -219,7 +217,7 @@ export const Selectbox = defineComponent({
 
     return () => {
       const slot = { open: selectboxState.value === SelectboxState.Open }
-      return render({ props: passThroughProps, slot, slots, attrs })
+      return render({ props, slot, slots, attrs })
     }
   },
 })
@@ -496,12 +494,8 @@ export const SelectboxOption = defineComponent({
   setup(props, { slots, attrs }) {
     const api = useSelectboxContext('SelectboxOption')
     const id = `raxui-selectbox-option-${useId()}`
-    const {
-      disabled,
-      class: defaultClass,
-      className = defaultClass,
-      value,
-    } = props
+    const disabled = props.disabled
+    const value = props.value
 
     const active = computed(() => {
       return api.activeOptionIndex.value !== null
@@ -566,7 +560,6 @@ export const SelectboxOption = defineComponent({
         id,
         role: 'option',
         tabIndex: -1,
-        class: resolvePropValue(className, slot),
         'aria-disabled': disabled === true ? true : undefined,
         'aria-selected': selected.value === true ? selected.value : undefined,
         onClick: handleClick,
