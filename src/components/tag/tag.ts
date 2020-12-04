@@ -809,9 +809,14 @@ export const TagMenuOption = defineComponent({
       api.select(props.optionId)
     }
 
+    function handleOnMouseOver() {
+      api.setHighlightedOption(props.optionId)
+    }
+
     return {
       id,
       handleOnClick,
+      handleOnMouseOver,
     }
   },
   render() {
@@ -843,6 +848,7 @@ export const TagMenuOption = defineComponent({
       'aria-disabled': this.$props.disabled === true ? true : undefined,
       'aria-selected': selected.value === true ? true : undefined,
       onClick: this.handleOnClick,
+      onMouseOver: this.handleOnMouseOver,
     }
 
     return render({
@@ -854,9 +860,9 @@ export const TagMenuOption = defineComponent({
   },
 })
 
-// export const TagCreateOption = defineComponent({
-//   name: 'TagCreateOption',
-//   props: {
-//     as: { type: [Object, String], default: 'template' },
-//   },
-// })
+export const TagCreateOption = defineComponent({
+  name: 'TagCreateOption',
+  props: {
+    as: { type: [Object, String], default: 'template' },
+  },
+})
