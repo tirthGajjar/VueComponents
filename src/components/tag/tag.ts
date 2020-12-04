@@ -402,9 +402,10 @@ export const Tags = defineComponent({
 
         if (!api.isOpen.value) {
           api.openMenu()
+          this.foucsFilterBox()
+        } else {
+          api.closeMenu()
         }
-
-        this.foucsFilterBox()
       },
       removeLastSelectedOption() {
         if (props.modelValue.length === 0) {
@@ -554,7 +555,9 @@ export const TagSelectOption = defineComponent({
     const id = `raxui-tag-select-option-${useId()}`
     const optionId = computed(() => props.optionId)
 
-    function removeOption() {
+    function removeOption(event: MouseEvent) {
+      event.preventDefault()
+      event.stopPropagation()
       if (!api.isOpen.value) {
         return api.openMenu()
       }
@@ -581,9 +584,9 @@ export const TagSelectOption = defineComponent({
       isOpen: api.isOpen.value,
     }
 
-    const handleOnClick = () => {
+    const handleOnClick = (event: MouseEvent) => {
       if (this.$props.onClickRemove) {
-        this.removeOption()
+        this.removeOption(event)
       }
     }
 
@@ -620,7 +623,7 @@ export const TagRemoveIcon = defineComponent({
 
     const propsWeControl = {
       id: this.id,
-      onClick: tagSelectOptionAPI.removeOption(),
+      onClick: tagSelectOptionAPI.removeOption,
     }
 
     const slot = {}

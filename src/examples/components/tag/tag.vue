@@ -23,7 +23,7 @@
           <div class="relative text-white">
             <span
               style="box-shadow: rgba(255, 255, 255, 0.14) 0px -1px inset"
-              class="inline-block w-full shadow-sm bg-gray-700"
+              class="inline-block w-full shadow-sm gray_bg"
             >
               <TagsControl
                 style="min-height: 38px"
@@ -36,6 +36,7 @@
                     :key="tag.id"
                     :optionId="tag.id"
                     class="rounded-md inline-block truncate px-2 mr-4"
+                    :style="{ 'background-color': tag.bgColor }"
                   >
                     {{ tag.label }}
                   </TagSelectOption>
@@ -46,7 +47,7 @@
                 >
                   <TagFilter
                     size="1"
-                    class="border-none w-full inline-block resize-none p-0 h-5 bg-gray-700"
+                    class="border-none w-full inline-block resize-none p-0 h-5 gray_bg"
                   />
                 </span>
                 <TagsControlArrow
@@ -70,7 +71,7 @@
               </TagsControl>
             </span>
 
-            <div class="absolute w-full bg-gray-700 shadow-lg">
+            <div class="absolute w-full gray_bg shadow-lg">
               <TagMenu
                 v-if="isOpen"
                 class="py-1 w-full overflow-auto text-base leading-6 shadow-xs max-h-60 focus:outline-none sm:text-sm sm:leading-5"
@@ -91,7 +92,12 @@
                       )
                     "
                   >
-                    {{ tag.label }}
+                    <span
+                      class="block truncate max-w-max-content px-2 rounded-md font-normal"
+                      :style="{ 'background-color': tag.bgColor }"
+                    >
+                      {{ tag.label }}
+                    </span>
                   </div>
                 </TagMenuOption>
               </TagMenu>
@@ -128,22 +134,35 @@ export default {
     TagMenuOption,
   },
   setup() {
+    const colors = {
+      red: 'rgba(255, 115, 105, 0.5)',
+      blue: 'rgba(82, 156, 202, 0.5)',
+      green: 'rgba(77, 171, 154, 0.5)',
+      yellow: 'rgba(255, 220, 73, 0.5)',
+      orange: 'rgba(255, 163, 68, 0.5)',
+      purple: 'rgba(154, 109, 215, 0.5)',
+    }
+
     const tags = ref([
       {
         id: '1',
         label: 'Javascript',
+        bgColor: colors.red,
       },
       {
         id: '2',
         label: 'HTML',
+        bgColor: colors.blue,
       },
       {
         id: '3',
         label: 'CSS',
+        bgColor: colors.green,
       },
       {
         id: '4',
         label: 'NodeJS',
+        bgColor: colors.yellow,
       },
     ])
 
@@ -155,6 +174,7 @@ export default {
     return {
       tags,
       selectedTags,
+      colors,
       classNames(...classes) {
         return classes.filter(Boolean).join(' ')
       },
@@ -163,3 +183,9 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+.gray_bg {
+  background-color: rgb(55, 60, 63);
+}
+</style>
