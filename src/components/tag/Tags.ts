@@ -327,10 +327,7 @@ export const Tags = defineComponent({
         if (api.tagControlRef.value?.contains(event.target as HTMLElement))
           return
 
-        if (
-          !api.tagMenuRef.value?.contains(event.target as HTMLElement) ||
-          !api.tagCreateRef.value?.contains(event.target as HTMLElement)
-        ) {
+        if (!api.tagMenuRef.value?.contains(event.target as HTMLElement)) {
           api.closeMenu()
         }
       }
