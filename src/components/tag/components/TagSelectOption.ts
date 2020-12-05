@@ -1,7 +1,7 @@
 import { useId } from '@/hooks/use-id'
 import { render } from '@/utils/render'
 import { computed, defineComponent, provide } from 'vue'
-import { useTagsContext, TagSelectOptionContext } from './context'
+import { useTagsContext, TagSelectOptionContext } from '../context'
 
 export const TagSelectOption = defineComponent({
   name: 'TagSelectOption',

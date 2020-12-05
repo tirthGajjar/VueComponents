@@ -1,7 +1,7 @@
 import { useId } from '@/hooks/use-id'
 import { render } from '@/utils/render'
 import { defineComponent } from 'vue'
-import { useTagSelectOptionContext } from './context'
+import { useTagSelectOptionContext } from '../context'
 
 export const TagRemoveIcon = defineComponent({
   props: {

@@ -1,32 +1,31 @@
 import { useId } from '@/hooks/use-id'
 import { render } from '@/utils/render'
 import { defineComponent } from 'vue'
-import { useTagsContext } from './context'
+import { useTagsContext } from '../context'
 
-export const TagMenu = defineComponent({
-  name: 'TagMenu',
+export const TagSelectionList = defineComponent({
+  name: 'TagSelectionList',
   props: {
-    as: { type: [Object, String], default: 'div' },
-    unmount: { type: Boolean, default: true },
+    as: {
+      type: [Object, String],
+      default: 'div',
+    },
   },
   setup() {
-    const api = useTagsContext('TagMenu', 'Tags')
-
-    const id = `raxui-tag-menu-${useId()}`
+    const api = useTagsContext('TagSelectionList', 'TagsControl')
+    const id = `raxui-tag-selection-list-${useId()}`
 
     return {
       id,
-      el: api.tagMenuRef,
+      el: api.tagSelectionListRef,
     }
   },
   render() {
-    const api = useTagsContext('TagMenu', 'Tags')
-
+    const api = useTagsContext('TagSelectionList', 'TagsControl')
     const slot = { isOpen: api.isOpen.value }
 
     const propsWeControl = {
       id: this.id,
-      role: 'listbox',
       ref: 'el',
     }
 

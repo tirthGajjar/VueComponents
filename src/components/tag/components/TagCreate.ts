@@ -1,8 +1,8 @@
 import { useId } from '@/hooks/use-id'
 import { render } from '@/utils/render'
 import { computed, defineComponent } from 'vue'
-import { useTagsContext } from './context'
-import { Option } from './types'
+import { useTagsContext } from '../context'
+import { Option } from '../types'
 
 export const TagCreate = defineComponent({
   name: 'TagCreate',

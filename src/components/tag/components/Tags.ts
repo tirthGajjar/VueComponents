@@ -11,15 +11,15 @@ import {
   ref,
   watch,
 } from 'vue'
-import { TAG_SELECTION_MODE } from './constant'
-import { TagsContext } from './context'
+import { TAG_SELECTION_MODE } from '../constant'
+import { TagsContext } from '../context'
 import {
   Option,
   OptionsMap,
   SelectedOptionsIdMap,
   StringOrNumber,
   TagsStateDefinition,
-} from './types'
+} from '../types'
 
 export const Tags = defineComponent({
   name: 'Tags',

@@ -1,7 +1,7 @@
 import { useId } from '@/hooks/use-id'
 import { render } from '@/utils/render'
 import { defineComponent } from 'vue'
-import { useTagsContext } from './context'
+import { useTagsContext } from '../context'
 
 export const TagsControlArrow = defineComponent({
   name: 'TagsControlArrow',

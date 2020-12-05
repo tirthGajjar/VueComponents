@@ -2,8 +2,8 @@ import { useId } from '@/hooks/use-id'
 import { Keys } from '@/keyboard'
 import { render } from '@/utils/render'
 import { defineComponent } from 'vue'
-import { keysThatRequireToOpenMenu } from './constant'
-import { useTagsContext } from './context'
+import { keysThatRequireToOpenMenu } from '../constant'
+import { useTagsContext } from '../context'
 
 export const TagFilter = defineComponent({
   name: 'TagFilter',
