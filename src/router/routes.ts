@@ -109,19 +109,18 @@ const routes: RouteRecordRaw[] = [
       },
     ],
   },
-  // {
-  //   name: 'Select',
-  //   path: '/select',
-  //   component: () => import('@examples/components/select/select-multiple.vue'),
-  //   children: [
-  //     {
-  //       name: 'Select multiple',
-  //       path: '/select/multiple',
-  //       component: () =>
-  //         import('@examples/components/select/select-multiple.vue'),
-  //     },
-  //   ],
-  // },
+  {
+    name: 'Radio',
+    path: '/radio',
+    component: () => import('@examples/components/radio/radio.vue'),
+    children: [
+      {
+        name: 'Radio - Basic',
+        path: '/radio/basic',
+        component: () => import('@examples/components/radio/radio.vue'),
+      },
+    ],
+  },
 ]
 
 export default routes
