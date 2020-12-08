@@ -121,6 +121,18 @@ const routes: RouteRecordRaw[] = [
       },
     ],
   },
+  {
+    name: 'Checkbox',
+    path: '/checkbox',
+    component: () => import('@examples/components/checkbox/checkbox.vue'),
+    children: [
+      {
+        name: 'Checkbox - Basic',
+        path: '/checkbox/basic',
+        component: () => import('@examples/components/checkbox/checkbox.vue'),
+      },
+    ],
+  },
 ]
 
 export default routes
