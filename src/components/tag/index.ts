@@ -1,4 +1,3 @@
-export * from './types'
 export * from './components/Tags'
 export * from './components/TagsControl'
 export * from './components/TagSelectionList'

@@ -1,6 +1,5 @@
+import { StringOrNumber } from '@/types'
 import { ComputedRef, Ref } from 'vue'
-
-export type StringOrNumber = string | number
 
 export type Option = {
   // Unique id of the option

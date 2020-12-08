@@ -1,7 +1,6 @@
+import { StringOrNumber } from '@/types'
 import { Focus } from '@/utils/calculate-active-index'
 import { ComputedRef, Ref } from 'vue'
-
-export type StringOrNumber = string | number
 
 export type Option = {
   id: string

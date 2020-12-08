@@ -1,4 +1,5 @@
-import { StringOrNumber, Option } from './../types'
+import { StringOrNumber } from '@/types'
+import { Option } from './../types'
 import { useId } from '@/hooks/use-id'
 import { render } from '@/utils/render'
 import { computed, defineComponent, inject, provide, ref } from 'vue'

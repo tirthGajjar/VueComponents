@@ -13,11 +13,11 @@ import {
 } from 'vue'
 import { TAG_SELECTION_MODE } from '../constant'
 import { TagsContext } from '../context'
+import { StringOrNumber } from '@/types'
 import {
   Option,
   OptionsMap,
   SelectedOptionsIdMap,
-  StringOrNumber,
   TagsStateDefinition,
 } from '../types'
 
