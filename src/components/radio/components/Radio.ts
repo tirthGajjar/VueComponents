@@ -35,12 +35,14 @@ export const Radio = defineComponent({
 
     function handleOnKeyDown(event: KeyboardEvent) {
       switch (event.key) {
+        case Keys.ArrowRight:
         case Keys.ArrowDown:
           {
             api.goToOption(Focus.Next)
           }
           break
 
+        case Keys.ArrowLeft:
         case Keys.ArrowUp:
           {
             api.goToOption(Focus.Previous)

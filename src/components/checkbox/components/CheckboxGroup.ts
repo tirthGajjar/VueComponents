@@ -70,7 +70,7 @@ export const CheckboxGroup = defineComponent({
       id: this.id,
       ref: 'el',
       tabIndex: -1,
-      role: 'checkboxgroup',
+      role: 'group',
     }
 
     return render({

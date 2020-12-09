@@ -1,4 +1,5 @@
 import { useId } from '@/hooks/use-id'
+import { Keys } from '@/keyboard'
 import { render } from '@/utils/render'
 import { computed, defineComponent, onMounted, onUnmounted } from 'vue'
 import { useCheckboxGroupContext } from '../context'
@@ -31,9 +32,21 @@ export const Checkbox = defineComponent({
       api.markChecked(option)
     }
 
+    function handleOnKeyDown(event: KeyboardEvent) {
+      switch (event.key) {
+        case Keys.Space:
+        case Keys.Enter:
+          {
+            handleCheckboxSelection()
+          }
+          break
+      }
+    }
+
     return {
       id,
       handleCheckboxSelection,
+      handleOnKeyDown,
     }
   },
   render() {
@@ -53,6 +66,7 @@ export const Checkbox = defineComponent({
       tabIndex: 0,
       'aria-checked': slot.checked ? 'true' : 'false',
       onClick: this.handleCheckboxSelection,
+      onKeyDown: this.handleOnKeyDown,
     }
 
     return render({
